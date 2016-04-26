@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.mobisci_lab.itroll_demo.MainActivity">
+
+    <Button android:id="@+id/btn_test_backward_compat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text = "Test Fake Loc (Backward Compat)"/>
+
+    <Button android:id="@+id/btn_test_fake_loc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text = "Test Fake Loc"
+        android:layout_below="@id/btn_test_backward_compat"
+        />
+
+    <Button android:id="@+id/btn_test_fake_navi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text = "Test Fake Navigation"
+        android:layout_below="@id/btn_test_fake_loc"
+        />
+
+
+    <Button android:id="@+id/btn_test_fake_html5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text = "Test Fake Location From Html5"
+        android:layout_below="@id/btn_test_fake_navi"
+        android:visibility="gone"
+        />
+
+
+    <Button android:id="@+id/btn_test_clear_backward_compat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text = "Clear (Backward Compat)"
+        android:layout_above="@+id/btn_test_clear"
+        />
+
+    <Button android:id="@id/btn_test_clear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:text = "Clear"/>
+
+</RelativeLayout>
