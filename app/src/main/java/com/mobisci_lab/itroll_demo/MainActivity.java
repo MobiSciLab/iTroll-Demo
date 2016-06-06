@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void testFakeNavigation() throws JSONException {
         Log.i("MobiSciLab", "testFakeNavigation");
+        
         JSONArray terminal = new JSONArray();
         terminal.put(new JSONObject().put("lat", 38.872441).put("lng", -77.057790)); //Point A
         terminal.put(new JSONObject().put("lat", 38.874580).put("lng", -77.053097)); //Point B
