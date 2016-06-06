@@ -2,7 +2,10 @@ package com.mobisci_lab.itroll_demo;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 
 import org.json.JSONArray;
@@ -21,10 +24,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.btn_test_fake_html5).setOnClickListener(this);
         findViewById(R.id.btn_test_clear_backward_compat).setOnClickListener(this);
         findViewById(R.id.btn_test_clear).setOnClickListener(this);
+        findViewById(R.id.btn_test_mix).setOnClickListener(this);
     }
 
     private void testFakeLocBackwardCompat() {
-
+        Log.i("MobiSciLab", "testFakeLocBackwardCompat");
         Intent intent = new Intent();
         intent.setAction("com.msl.worldtroll.MANUAL");
         intent.putExtra("ENABLE_FAKE_LOCATION", true);//true: enable, false: disable
@@ -32,29 +36,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         intent.putExtra("LOCATION_MODE", 0); //0: High accuracy, 1: Baterry saving; 2: Device only
 
         intent.putExtra("ENABLE_GPS_DATA", true); //true:enable, false: disable
-        intent.putExtra("GPS_DATA_DELAY", 0);//GPS location data will be simulated after "GPS_DATA_DELAY" seconds
+        intent.putExtra("GPS_DATA_DELAY", 1);//GPS location data will be simulated after "GPS_DATA_DELAY" seconds
         intent.putExtra("GPS_LOCATION", "38.871063 -77.055612 5 10"); //GPS data format: lat lon altitude accuracy
 
         intent.putExtra("ENABLE_NETWORK_DATA", true); //true:enable, false: disable
-        intent.putExtra("NETWORK_DATA_DELAY", 0);//Network location data will be simulated after "NETWORK _DATA_DELAY" seconds
+        intent.putExtra("NETWORK_DATA_DELAY", 1);//Network location data will be simulated after "NETWORK _DATA_DELAY" seconds
         intent.putExtra("NETWORK_LOCATION", "38.871063 -77.055612 5 10"); //Network data format: lat lon altitude accuracy
 
         intent.putExtra("ENABLE_FUSED_DATA", true); //true:enable, false: disable
-        intent.putExtra("FUSED_DATA_DELAY", 0);//FUSED location data will be simulated after "FUSED_DATA_DELAY" seconds
+        intent.putExtra("FUSED_DATA_DELAY", 1);//FUSED location data will be simulated after "FUSED_DATA_DELAY" seconds
         intent.putExtra("FUSED_LOCATION", "-18.558935 46.689362 5 10"); //Fused data format: lat lon altitude accuracy
 
+        intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
         sendBroadcast(intent);
     }
 
     private void testClearBackwardCompat() {
+        Log.i("MobiSciLab", "testClearBackwardCompat");
         Intent intent = new Intent();
         intent.setAction("com.msl.worldtroll.MANUAL");
         intent.putExtra("ENABLE_FAKE_LOCATION", false);//true: enable, false: disable
+        intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
         sendBroadcast(intent);
     }
 
     private void testFakeLoc() throws JSONException {
-
+        Log.i("MobiSciLab", "testFakeLoc");
         JSONObject jsonData = new JSONObject();
         jsonData.put("ENABLE_FAKE_LOCATION", true);
         jsonData.put("LOCATION_MODE", 0);
@@ -74,12 +81,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Intent intent = new Intent();
         intent.setAction("com.msl.worldtroll.MANUAL");
         intent.putExtra("DATA", jsonData.toString());
+        intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
         sendBroadcast(intent);
     }
 
 
     private void testFakeNavigation() throws JSONException {
-
+        Log.i("MobiSciLab", "testFakeNavigation");
         JSONArray terminal = new JSONArray();
         terminal.put(new JSONObject().put("lat", 38.872441).put("lng", -77.057790)); //Point A
         terminal.put(new JSONObject().put("lat", 38.874580).put("lng", -77.053097)); //Point B
@@ -94,17 +102,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Intent intent = new Intent();
         intent.setAction("com.msl.worldtroll.MANUAL");
         intent.putExtra("DATA", jsonData.toString());
+        intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
         sendBroadcast(intent);
     }
 
 
     private void testClear() throws JSONException {
+        Log.i("MobiSciLab", "testClear");
         JSONObject jsonData = new JSONObject();
         jsonData.put("ENABLE_FAKE_LOCATION", false);
 
         Intent intent = new Intent();
         intent.setAction("com.msl.worldtroll.MANUAL");
         intent.putExtra("DATA", jsonData.toString());
+        intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
         sendBroadcast(intent);
     }
 
@@ -141,6 +152,101 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                break;
+            case R.id.btn_test_mix:
+                testClearBackwardCompat();
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        testFakeLocBackwardCompat();
+                    }
+                }, 4000);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            testClear();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, 8000);
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            testFakeLoc();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, 20000);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            testClear();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, 26000);
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            testFakeNavigation();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, 36000);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            testClear();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, 42000);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            testFakeLoc();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, 52000);
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            testFakeNavigation();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, 58000);
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            testFakeLoc();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, 66000);
+
                 break;
         }
     }
